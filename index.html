@@ -178,6 +178,7 @@ const BG_VIDEO = "";        // optional: "background.mp4" to use your own loopin
 
 /* ---------- gallery ---------- */
 const COLORS = {};  // all categories share the HUD cyan; kept for future per-category colors
+const thumb = f => f.replace(/^wallpapers\//, "thumbs/").replace(/\.[^.]+$/, ".webp");
 const root = document.getElementById("cats");
 const lb = document.getElementById("lb"), lbImg = lb.querySelector("img"), lbA = lb.querySelector("a");
 lb.onclick = e => { if (e.target !== lbA) lb.classList.remove("on"); };
@@ -204,7 +205,7 @@ Object.entries(WALLS).forEach(([name, sets], idx) => {
     pages.innerHTML = Array.from({length: total}, (_, i) => `<button data-p="${i+1}" class="${i+1===state.page?"on":""}">${i+1}</button>`).join("");
     const slice = files.slice((state.page - 1) * PER_PAGE, state.page * PER_PAGE);
     grid.innerHTML = slice.length
-      ? slice.map((f, i) => `<a href="${f}" style="--i:${i}"><img loading="lazy" src="${f}" alt=""><span>${f.split("/").pop()}</span></a>`).join("")
+      ? slice.map((f, i) => `<a href="${f}" style="--i:${i}"><img loading="lazy" src="${thumb(f)}" onerror="this.onerror=null;this.src='${f}'" alt=""><span>${f.split("/").pop()}</span></a>`).join("")
       : `<div class="empty">${count ? "NO MATCHES" : "COMING SOON"}</div>`;
   }
   seg.onclick = e => { const v = e.target.dataset.v; if (v) { state.variant = v; state.page = 1; render(); } };
