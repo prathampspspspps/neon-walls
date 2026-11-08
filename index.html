@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Walls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#00f0ff;--pink:#ff2bd6;--yellow:#fcee0a;--bg:#07040f;--glass:rgba(255,255,255,.06);--edge:rgba(255,255,255,.16)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:#e8f6ff;font:18px/1.4 "Share Tech Mono",ui-monospace,monospace;overflow-x:hidden}
+/* animated backdrop */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
+.bg i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(90px);opacity:.55;animation:drift 22s ease-in-out infinite alternate}
+.bg i:nth-child(1){background:#7b2cff;top:-20%;left:-10%}
+.bg i:nth-child(2){background:#ff2bd6;bottom:-25%;right:-10%;animation-duration:28s}
+.bg i:nth-child(3){background:#00c8ff;top:30%;left:35%;width:35vmax;height:35vmax;opacity:.35;animation-duration:34s}
+@keyframes drift{to{transform:translate(12vw,8vh) scale(1.2)}}
+.bg::after{content:"";position:absolute;inset:-100% -50% 0;background:
+ linear-gradient(rgba(0,240,255,.18) 1px,transparent 1px) 0 0/60px 60px,
+ linear-gradient(90deg,rgba(0,240,255,.18) 1px,transparent 1px) 0 0/60px 60px;
+ transform:perspective(500px) rotateX(62deg);transform-origin:top;animation:grid 3s linear infinite;
+ mask-image:linear-gradient(transparent 10%,#000 70%)}
+@keyframes grid{to{background-position:0 60px,0 60px}}
+body::after{content:"";position:fixed;inset:0;z-index:50;pointer-events:none;
+ background:repeating-linear-gradient(transparent 0 2px,rgba(0,0,0,.18) 3px)}
+main{max-width:1320px;margin:0 auto;padding:40px 16px 100px}
+/* title */
+h1{position:relative;margin:0 0 48px;padding:22px;text-align:center;font:800 clamp(1.6rem,4vw,2.8rem)/1 Orbitron,sans-serif;
+ letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 0 12px var(--cyan),0 0 32px var(--pink);
+ background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--edge);
+ clip-path:polygon(0 0,calc(100% - 28px) 0,100% 28px,100% 100%,28px 100%,0 calc(100% - 28px));animation:flicker 6s infinite}
+h1::before,h1::after{content:attr(data-t);position:absolute;inset:22px 0 auto;opacity:.0}
+h1::before{color:var(--cyan);animation:glitch 5s infinite steps(1)}
+h1::after{color:var(--pink);animation:glitch 5s infinite steps(1) reverse}
+@keyframes glitch{0%,92%,100%{opacity:0;transform:none}93%{opacity:.8;transform:translate(-5px,1px)}95%{opacity:.8;transform:translate(5px,-1px)}97%{opacity:0}}
+@keyframes flicker{0%,94%,100%{opacity:1}95%{opacity:.7}96%{opacity:1}97%{opacity:.6}}
+/* categories */
+.cat{--c:var(--cyan);margin-bottom:22px}
+.head{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 24px;font:600 1.15rem Orbitron,sans-serif;
+ letter-spacing:.2em;text-transform:uppercase;color:#fff;cursor:pointer;
+ background:linear-gradient(90deg,color-mix(in srgb,var(--c) 30%,transparent),var(--glass));
+ backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--c);border-left-width:6px;
+ box-shadow:0 0 18px -4px var(--c),inset 0 0 20px -12px var(--c);
+ clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%);transition:box-shadow .3s,transform .3s,letter-spacing .3s}
+.head:hover{box-shadow:0 0 30px 0 var(--c),inset 0 0 26px -8px var(--c);letter-spacing:.28em;transform:translateX(6px)}
+.head small{font:1rem "Share Tech Mono",monospace;letter-spacing:.05em;opacity:.8}
+.head b{display:inline-block;margin-left:14px;transition:transform .4s}
+.open .head b{transform:rotate(90deg)}
+.wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s cubic-bezier(.2,.8,.2,1)}
+.open .wrap{grid-template-rows:1fr}
+.inner{overflow:hidden;min-height:0}
+.bar{display:flex;flex-direction:column;align-items:center;gap:22px;padding:30px 0 22px}
+.seg{display:flex;padding:4px;background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--edge);border-radius:4px;position:relative}
+.seg button,.pages button{font:600 .95rem Orbitron,sans-serif;letter-spacing:.1em;color:#cfeaff;background:none;border:0;padding:10px 26px;cursor:pointer;position:relative;z-index:1;transition:color .3s}
+.seg button.on{color:#07040f}
+.seg .pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:var(--c);box-shadow:0 0 18px var(--c);transition:transform .4s cubic-bezier(.3,1.3,.5,1)}
+.seg.light .pill{transform:translateX(100%)}
+.pages{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.pages button{padding:9px 16px;background:var(--glass);border:1px solid var(--edge);backdrop-filter:blur(10px);transition:all .25s}
+.pages button:hover{border-color:var(--c);box-shadow:0 0 14px -2px var(--c);transform:translateY(-3px)}
+.pages button.on{background:var(--c);color:#07040f;box-shadow:0 0 20px var(--c)}
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;padding:22px;background:var(--glass);
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--edge);margin-bottom:10px;
+ box-shadow:0 20px 60px -30px #000}
+.grid a{position:relative;display:block;width:208px;height:117px;overflow:hidden;border:1px solid var(--edge);
+ animation:pop .55s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:calc(var(--i)*60ms);transition:transform .3s,box-shadow .3s,border-color .3s}
+.grid a::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s}
+.grid a:hover{transform:translateY(-6px) scale(1.04);border-color:var(--c);box-shadow:0 12px 30px -6px var(--c);z-index:2}
+.grid a:hover::after{transform:translateX(120%)}
+.grid img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.9);filter:blur(6px)}}
+.empty{padding:30px;opacity:.7}
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(7,4,15,.65);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#lb.on{display:grid;animation:fade .3s}
+#lb img{max-width:92vw;max-height:80vh;border:1px solid var(--cyan);box-shadow:0 0 50px -6px var(--pink);animation:pop .4s both}
+#lb a{margin-top:16px;color:#07040f;background:var(--cyan);padding:10px 22px;font:600 .9rem Orbitron,sans-serif;text-decoration:none;letter-spacing:.1em;box-shadow:0 0 20px var(--cyan)}
+#lb div{display:flex;flex-direction:column;align-items:center}
+@keyframes fade{from{opacity:0}}
+@media(max-width:620px){.grid a{width:calc(50% - 7px);height:auto;aspect-ratio:16/9}.head{padding:12px 14px;letter-spacing:.1em}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<main>
+  <h1 data-t="Neon Walls">Neon Walls</h1>
+  <div id="cats"></div>
+</main>
+<div id="lb"><div><img alt=""><a download target="_blank" rel="noopener">DOWNLOAD</a></div></div>
+<script src="wallpapers.js"></script>
+<script>
+const PER_PAGE = 8;                       // images per page -> more images = more page numbers
+const COLORS = {anime:"#ff2bd6",brands:"#ff3b3b",game:"#39ff14",minimalistic:"#fcee0a",mix:"#00f0ff",
+  painting:"#c77dff",photography:"#00ffa3",cyberpunk:"#ff6ec7",space:"#5b8cff",nature:"#7dff5b",
+  abstract:"#ff9f1c",cars:"#ff4d6d",movies:"#ffd60a",tech:"#00e5ff"};
+const FALLBACK = ["#00f0ff","#ff2bd6","#fcee0a","#39ff14","#c77dff"];
+const root = document.getElementById("cats");
+const lb = document.getElementById("lb"), lbImg = lb.querySelector("img"), lbA = lb.querySelector("a");
+lb.onclick = e => { if (e.target !== lbA) lb.classList.remove("on"); };
+addEventListener("keydown", e => e.key === "Escape" && lb.classList.remove("on"));
+
+Object.entries(WALLS).forEach(([name, sets], idx) => {
+  const count = (sets.dark?.length||0) + (sets.light?.length||0);
+  if (!count) return;                      // hide empty categories
+  const state = {variant: sets.dark?.length ? "dark" : "light", page: 1};
+  const cat = document.createElement("section");
+  cat.className = "cat";
+  cat.style.setProperty("--c", COLORS[name] || FALLBACK[idx % FALLBACK.length]);
+  cat.innerHTML = `<button class="head"><span>${name}</span><span><small>${count}</small><b>▶</b></span></button>
+    <div class="wrap"><div class="inner"><div class="bar">
+      <div class="seg"><span class="pill"></span><button data-v="dark">Dark</button><button data-v="light">Light</button></div>
+      <div class="pages"></div></div><div class="grid"></div></div></div>`;
+  const seg = cat.querySelector(".seg"), pages = cat.querySelector(".pages"), grid = cat.querySelector(".grid");
+
+  function render() {
+    const files = sets[state.variant] || [];
+    const total = Math.max(1, Math.ceil(files.length / PER_PAGE));
+    seg.classList.toggle("light", state.variant === "light");
+    seg.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === state.variant));
+    pages.innerHTML = Array.from({length: total}, (_, i) =>
+      `<button data-p="${i+1}" class="${i+1===state.page?"on":""}">${i+1}</button>`).join("");
+    const slice = files.slice((state.page-1)*PER_PAGE, state.page*PER_PAGE);
+    grid.innerHTML = slice.length
+      ? slice.map((f,i) => `<a href="${f}" style="--i:${i}"><img loading="lazy" src="${f}" alt=""></a>`).join("")
+      : `<div class="empty">No wallpapers here yet.</div>`;
+  }
+  seg.onclick = e => { const v = e.target.dataset.v; if (v) { state.variant = v; state.page = 1; render(); } };
+  pages.onclick = e => { const p = e.target.dataset.p; if (p) { state.page = +p; render(); } };
+  grid.onclick = e => { const a = e.target.closest("a"); if (!a) return; e.preventDefault();
+    lbImg.src = lbA.href = a.getAttribute("href"); lb.classList.add("on"); };
+  cat.querySelector(".head").onclick = () => cat.classList.toggle("open");
+  root.appendChild(cat);
+  render();
+});
+root.firstElementChild?.classList.add("open");
+</script>
+</body>
+</html>
